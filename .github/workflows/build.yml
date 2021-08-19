@@ -48,7 +48,7 @@ jobs:
     - name: upload executable to github tag
       uses: svenstaro/upload-release-action@v2
       with:
-        repo_token: ${{ secrets.OAUTH_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ github.workspace }}/dist/${{ matrix.artifact_name }}
         asset_name: ${{ matrix.assert_name }}
         tag: ${{ github.ref }}
