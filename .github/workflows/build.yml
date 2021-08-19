@@ -16,14 +16,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: main
-            asset_name: serial-monitor-cli-linux
+            asset_name: linux.zip
           - os: macos-latest
-            artifact_name: main
-            asset_name: serial-monitor-cli-macos
+            asset_name: macos.zip
           - os: windows-latest
-            artifact_name: main.exe
-            asset_name: serial-monitor-cli-windows.exe
+            asset_name: windows.zip
     environment: build
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
@@ -44,11 +41,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Build
       run: |
-        pyinstaller src/main.py --onefile
+        pyinstaller src/main.py --onedir
+        python -c "import shutil; shutil.make_archive('${{ github.workspace }}/dist/main', 'zip', '${{ github.workspace }}/dist/main')"
     - name: upload executable to github tag
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ github.workspace }}/dist/${{ matrix.artifact_name }}
+        file: ${{ github.workspace }}/dist/main.zip
         asset_name: ${{ matrix.asset_name }}
         tag: ${{ github.ref }}
