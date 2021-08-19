@@ -42,7 +42,7 @@ jobs:
     - name: Build
       run: |
         pyinstaller src/main.py --onedir
-        python -c "import shutil; shutil.make_archive('${{ github.workspace }}/dist/main', 'zip', '${{ github.workspace }}/dist/main')"
+        python -c "import shutil; shutil.make_archive('dist/main', 'zip', 'dist/main')"
     - name: upload executable to github tag
       uses: svenstaro/upload-release-action@v2
       with:
