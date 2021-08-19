@@ -14,7 +14,16 @@ jobs:
     runs-on: ${{ matrix.os }} 
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        include:
+          - os: ubuntu-latest
+            artifact_name: main
+            asset_name: serial-monitor-cli-linux
+          - os: macos-latest
+            artifact_name: main
+            asset_name: serial-monitor-cli-macos
+          - os: windows-latest
+            artifact_name: main.exe
+            asset_name: serial-monitor-cli-windows
     environment: build
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
@@ -40,7 +49,6 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.OAUTH_TOKEN }}
-        file: ${{github.workspace}}/dist/main*
+        file: ${{ github.workspace }}/dist/${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.assert_name }}
         tag: ${{ github.ref }}
-        overwrite: true
-        file_glob: true
